@@ -18,7 +18,7 @@ compile '/assets/css/*' do
   if item[:combined]
     filter :haml
     filter :yui_compress
-  else
+  elsif item[:extension] == 'less'
     filter :less
   end
 end
