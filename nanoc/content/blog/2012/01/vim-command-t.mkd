@@ -9,6 +9,7 @@ tags: [vim]
 ## CommandT
 
 作者的简介
+
 > The Command-T plug-in for VIM provides an extremely fast, intuitive mechanism for opening files with a minimal number of keystrokes. It's named "Command-T" because it is inspired by the "Go to File" window bound to Command-T in TextMate.
 >
 > Files are selected by typing characters that appear in their paths, and are ordered by an algorithm which knows that characters that appear in certain locations (for example, immediately after a path separator) should be given more weight.
@@ -25,7 +26,7 @@ tags: [vim]
 
 ### layout
 
-CommandT 的 __Match Window__ default 是在 bottom 的. 使用的时候, 随着输入关键字的变化, window size 也在不停的变化, 于是就看到 highlist 的第一行在那里上下狂跳(囧).
+CommandT 的 __Match Window__ default 是在 bottom 的. 使用的时候, 随着输入关键字的变化, window size 也在不停的变化, 于是就看到 highlight 的第一行在那里上下狂跳(囧).
 
 help 了一下, 发现了选项 `g:CommandTMatchWindowAtTop`
 
