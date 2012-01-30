@@ -1,0 +1,10 @@
+source :rubygems
+
+gem 'adsf'
+gem 'builder'
+gem 'haml'
+gem 'kramdown'
+gem 'less'
+gem 'mime-types'
+gem 'nanoc'
+gem 'yui-compressor'
