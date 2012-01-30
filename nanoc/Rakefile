@@ -5,11 +5,22 @@ rescue LoadError
   require 'nanoc3/tasks'
 end
 
-
-desc 'Compile the site'
-task :compile do
+task :compile_only do
   system('nanoc', 'compile')
 end
+
+task :rename_assets do
+  as = ['../deploy/assets/css/screen.css']
+  as.each { |a|
+    a =~ /^(\.\..*)\.(.*)$/
+    base = $1
+    ext = $2
+    system('bash', '-c', "mv #{a} #{base}-$(md5sum #{a}| cut -d' ' -f 1).#{ext}")
+  }
+end
+
+desc 'Compile the site'
+task :compile => [:compile_only, :rename_assets]
 
 desc 'Auto Compile'
 task :ac do

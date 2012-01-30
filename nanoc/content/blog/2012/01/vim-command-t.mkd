@@ -1,0 +1,80 @@
+---
+kind: 'article'
+created_at: 2012/01/20 21:30:31
+title: 'Vim commandT'
+tags: [vim]
+---
+随着公司 repo 中代码量的增长, 在 vim 里面要找到一个文件是越来越难了. [NERDTree][] 自然是必不可少的, 但对于过深的子目录还是无能为力. Search 了一番, 最后在[这里](http://stevelosh.com/blog/2010/09/coming-home-to-vim/#peepopen)找里了 [CommandT][]
+
+## CommandT
+
+作者的简介
+> The Command-T plug-in for VIM provides an extremely fast, intuitive mechanism for opening files with a minimal number of keystrokes. It's named "Command-T" because it is inspired by the "Go to File" window bound to Command-T in TextMate.
+>
+> Files are selected by typing characters that appear in their paths, and are ordered by an algorithm which knows that characters that appear in certain locations (for example, immediately after a path separator) should be given more weight.
+
+具体功能可以到[项目主页][CommandT]围观 Live demonstration, 或安装后 `:h :CommandT`
+
+## Install CommandT
+
+推荐以 pathogen bundle 安装, 详见 [doc](http://git.wincent.com/command-t.git/blob_plain/HEAD:/doc/command-t.txt) 中的 "MANAGING USING PATHOGEN".  安装后要记得 `rake make` 来编译 c extension.
+
+## Config CommandT (with NERDTree)
+
+作为一个配置控, 安装完成远远不是结束, 现在正文开始 ^\_^
+
+### layout
+
+CommandT 的 __Match Window__ default 是在 bottom 的. 使用的时候, 随着输入关键字的变化, window size 也在不停的变化, 于是就看到 highlist 的第一行在那里上下狂跳(囧).
+
+help 了一下, 发现了选项 `g:CommandTMatchWindowAtTop`
+
+所以在 *vimrc* 中加上
+
+    let g:CommandTMatchWindowAtTop = 1
+
+ps: 另外还有一个选项 `g:ommandTMatchWindowReverse`, 依然保持 __Match Window__ 在 bottom, 但将 list 倒过来应该也会有人喜欢.
+
+### shortcut command
+
+然后快捷键也是必需的. 我要的效果是用快捷键呼出 __CommandT__ 时:
+
+* 如果当前正在编辑文件, __CommandT__ 的 root 设为文件所在的目录
+* 如果当前正在 NERDTree 中, 就将 __CommandT__ 的 root 设为当前 NERDTree 的 root.
+
+因为我设置了 `set autochdir`(`:h autochdir`), 所以对于第一种情况, 直接`:CommandT`就可以了.
+
+对于第二种情况, help 了一下找到一个变量`b:NERDTreeRoot`可以用, 所以合在一起就是
+
+    "" Command-T
+    function SmartCommandT()
+      if exists("b:NERDTreeRoot")
+        exec 'CommandT ' . b:NERDTreeRoot.path.str()
+      else
+        CommandT
+      endif
+    endfunction
+
+再那这个function `map`到喜欢的 key 上就大功告成了.
+
+### (option) keymap in NERDTree
+
+在翻 NERDTree 的 help 时看到, 还可以对 NERDTree 的 node 加 action, e.g.
+
+    call NERDTreeAddKeyMap({
+            \ 'key': 'f',
+            \ 'callback': 'CommandTCurrentNERDTreeNode',
+            \ 'quickhelpText': 'CommandT on current node' })
+
+    function! CommandTCurrentNERDTreeNode()
+        let n = g:NERDTreeDirNode.GetSelected()
+        if n != {}
+            exec 'CommandT ' . n.path.str()
+        endif
+    endfunction
+
+在光标在 NERDTree 的 dirnode 上时, 按`f`, 就可以在选中的目录上打开 __CommandT__.
+
+
+[NERDTree]: http://github.com/scrooloose/nerdtree
+[CommandT]: https://wincent.com/products/command-t

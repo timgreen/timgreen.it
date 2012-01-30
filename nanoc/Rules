@@ -15,7 +15,7 @@
 
 # Compile
 compile '/assets/css/*' do
-  if item[:combined]
+  if item[:flag] == 'combined'
     filter :haml
     filter :yui_compress
   elsif item[:extension] == 'less'
@@ -31,6 +31,11 @@ compile '/sitemap' do
   filter :erb
 end
 
+compile '/blog/*' do
+  filter :kramdown
+  layout 'default'
+end
+
 compile '*' do
   if item.binary?
     # don’t filter binary items
@@ -42,8 +47,9 @@ end
 
 # Route
 route '/assets/css/*' do
-  if item[:combined]
-    item.identifier.chop + ".css"
+  if item[:flag] == 'combined'
+    profile = item.identifier.split('/')[-2]
+    "/assets/css/#{profile}.css"
   else
     nil
   end
