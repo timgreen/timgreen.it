@@ -1,0 +1,21 @@
+begin
+  require 'nanoc3/tasks'
+rescue LoadError
+  require 'rubygems'
+  require 'nanoc3/tasks'
+end
+
+
+desc 'Compile the site'
+task :compile do
+  system('nanoc', 'compile')
+end
+
+desc 'Auto Compile'
+task :ac do
+  system('nanoc', 'autocompile')
+end
+
+
+task :default => [:compile]
+task :validate => ['validate:css', 'validate:html']
