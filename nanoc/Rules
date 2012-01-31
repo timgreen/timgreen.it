@@ -33,6 +33,7 @@ end
 
 compile '/blog/*' do
   filter :kramdown
+  filter :dot
   layout 'default'
 end
 
