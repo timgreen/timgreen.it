@@ -42,6 +42,7 @@ compile '*' do
   else
     filter :erb
     layout 'default'
+    filter :colorize_syntax, :default_colorizer => :pygmentize
   end
 end
 
