@@ -30,7 +30,17 @@ class DotRender < Nanoc3::Filter
     # Get result
     stdout.rewind
     xml = Nokogiri::HTML.fragment(stdout.read, 'utf-8')
-    xml.css('svg').first.to_s
+    svg = xml.css('svg').first
+    remove_comments(svg)
+    svg.to_s
+  end
+
+  def remove_comments(node)
+    if (node.comment?)
+      node.remove
+    else
+      node.children.each { |x| remove_comments(x) }
+    end
   end
 
   def check_availability(*cmd)
