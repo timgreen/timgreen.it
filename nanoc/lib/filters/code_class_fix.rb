@@ -9,7 +9,9 @@ class CodeClassFixer < Nanoc3::Filter
     doc.css('pre > code').each do |code|
       lang = code.parent['lang']
       code.parent.remove_attribute('lang')
-      code['class'] = "#{code['class'] ? code['class'] + ' ': ''}language-#{lang}" unless lang.nil?
+      unless lang.nil?
+        code['class'] = "#{code['class'] ? code['class'] + ' ': ''}language-#{lang} language"
+      end
     end
 
     doc.to_s

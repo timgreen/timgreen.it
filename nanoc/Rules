@@ -20,6 +20,8 @@ compile '/assets/css/*' do
     filter :yui_compress
   elsif item[:extension] == 'less'
     filter :less
+  elsif item[:extension] == 'css.haml'
+    filter :haml
   end
 end
 
