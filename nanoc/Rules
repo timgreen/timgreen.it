@@ -34,6 +34,8 @@ end
 compile '/blog/*' do
   filter :kramdown
   filter :dot
+  filter :code_class_fix
+  filter :colorize_syntax, :default_colorizer => :pygmentize
   layout 'default'
 end
 
