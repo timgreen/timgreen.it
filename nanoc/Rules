@@ -33,6 +33,10 @@ compile '/sitemap' do
   filter :erb
 end
 
+compile '/atom' do
+  filter :erb
+end
+
 compile '/blog/*' do
   filter :kramdown
   filter :dot
@@ -62,6 +66,10 @@ route '/assets/css/*' do
 end
 
 route '/sitemap' do
+  item.identifier.chop + '.xml'
+end
+
+route '/atom' do
   item.identifier.chop + '.xml'
 end
 

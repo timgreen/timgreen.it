@@ -20,7 +20,7 @@ task :rename_assets do
 end
 
 desc 'Compile the site'
-task :compile => [:compile_only, :rename_assets]
+task :compile => [:compile_only]
 
 desc 'Auto Compile'
 task :ac do
@@ -29,4 +29,4 @@ end
 
 
 task :default => [:compile]
-task :validate => ['validate:css', 'validate:html']
+task :validate => ['validate:html']

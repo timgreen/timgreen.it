@@ -20,6 +20,9 @@ index_filenames: [ 'index.html' ]
 enable_output_diff: false
 
 base_url: http://timgreen.it
+title: Tim Green & IT
+author_name: Tim Green
+author_uri: http://timgreen.it
 
 # The data sources where nanoc loads its data from. This is an array of
 # hashes; each array element represents a single data source. By default,
