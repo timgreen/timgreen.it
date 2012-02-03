@@ -33,7 +33,7 @@ compile '/sitemap' do
   filter :erb
 end
 
-compile '/atom' do
+compile '/feed' do
   filter :erb
 end
 
@@ -69,7 +69,7 @@ route '/sitemap' do
   item.identifier.chop + '.xml'
 end
 
-route '/atom' do
+route '/feed' do
   item.identifier.chop + '.xml'
 end
 
