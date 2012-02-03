@@ -6,3 +6,7 @@ end
 def urlForItem(id)
   itemFor(id).path
 end
+
+def urlForTag(tag)
+  urlForItem("/tags/#{tag}")
+end

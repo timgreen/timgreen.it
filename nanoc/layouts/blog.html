@@ -8,13 +8,15 @@
   </header>
   <div id="content"><%= yield %></div>
   <footer>
+    <% if not item[:tags].nil? %>
     <div class="tags-container">
       <span class="icon-tags">&nbsp;</span>
       <ul class="tags nav-list nav-list-with-sep">
         <% item[:tags].each do |tag| %>
-        <li><a class="tag" href=""><%= tag %></a></li>
+        <li><a class="tag" href="<%= urlForTag(tag) %>"><%= tag %></a></li>
         <% end %>
       </ul>
     </div>
+    <% end %>
   </footer>
 </acticle>

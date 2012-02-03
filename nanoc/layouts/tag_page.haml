@@ -1,0 +1,9 @@
+%h1
+  = "'#{tag.capitalize}' Articles"
+
+.tag-page
+  %ul
+    - items_with_tag(tag).each do |item|
+      - url= urlForItem(item.identifier)
+      %li
+        %a(href="#{url}" title="#{item[:title]}")= item[:title]
