@@ -2,7 +2,7 @@
   <header>
     <h1 class="title"><%= item[:title] %></h1>
     <div class="publish-time-container">
-      <span class="icon-publish-time">&nbsp;</span>
+      <span class="icon-publish-time" title="Publish time">&nbsp;</span>
       <span class="publish-time"><%= attribute_to_time(item[:created_at]) %></span>
     </div>
   </header>
@@ -10,7 +10,7 @@
   <footer>
     <% if not item[:tags].nil? %>
     <div class="tags-container">
-      <span class="icon-tags">&nbsp;</span>
+      <span class="icon-tags" title="Tags">&nbsp;</span>
       <ul class="tags nav-list nav-list-with-sep">
         <% item[:tags].each do |tag| %>
         <li><a class="tag" href="<%= urlForTag(tag) %>"><%= tag %></a></li>

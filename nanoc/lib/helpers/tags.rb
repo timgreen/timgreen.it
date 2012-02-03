@@ -18,7 +18,10 @@ module TaggingExtra
     tags.to_a
   end
 
-  # Creates in-memory tag pages from partial: layouts/_tag_page.haml
+  def tag_items
+    tag_set.map { |t| itemFor("/tags/#{t}") }
+  end
+
   def create_tag_pages
     tag_set.each do |tag|
       items << Nanoc3::Item.new(
@@ -28,6 +31,15 @@ module TaggingExtra
         :binary => false
       )
     end
+  end
+
+  def create_tags_page
+    items << Nanoc3::Item.new(
+      "= render('template/tags_page')",            # use locals to pass data
+      { :title => "Tags", :is_hidden => true},     # do not include in sitemap.xml
+      "/tags/",                                    # identifier
+      :binary => false
+    )
   end
 
 end
