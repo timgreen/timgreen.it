@@ -4,6 +4,6 @@
 .tags-page
   %ul
     - tag_items.each do |item|
-      - url= urlForItem(item.identifier)
+      - url= urlForItem(item)
       %li
         %a(href="#{url}" title="#{item[:title]}")= item[:title]

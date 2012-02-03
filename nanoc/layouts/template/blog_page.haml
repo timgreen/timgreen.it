@@ -3,6 +3,6 @@
 .blog-page
   %ul
     - blog_year_items.each do |item|
-      - url= urlForItem(item.identifier)
+      - url= urlForItem(item)
       %li
         %a(href="#{url}" title="#{item[:title]}")= item[:title]
