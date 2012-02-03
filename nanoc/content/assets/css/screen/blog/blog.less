@@ -1,0 +1,24 @@
+@import "../define/import";
+
+.publish-time-container,
+.tags-container {
+  line-height: 16px;
+  height: 16px;
+}
+.publish-time,
+.tags .tag {
+  font-size: @font-size-tag;
+  color: @tag-green;
+}
+
+.content {
+  font-size: @font-size-content;
+}
+
+.tags {
+  display: inline;
+
+  li::after {
+    content: ',';
+  }
+}

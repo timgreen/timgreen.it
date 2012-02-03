@@ -43,6 +43,7 @@ compile '/blog/*' do
   filter :dot
   filter :code_class_fix
   filter :colorize_syntax, :default_colorizer => :pygmentize
+  layout 'blog'
   layout 'default'
 end
 
