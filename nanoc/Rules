@@ -19,6 +19,7 @@ preprocess do
   create_blog_month_pages
   create_blog_year_pages
   create_blog_page
+  create_combined_css('screen')
 end
 
 # Compile

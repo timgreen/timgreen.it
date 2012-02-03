@@ -16,6 +16,21 @@ module Helpers
       }
     end
 
+    def create_combined_css(profile)
+      items << Nanoc3::Item.new(
+        [
+          "- less_items('#{profile}').each do |i|",
+          "  = i.compiled_content"
+        ].join("\n"),
+        {
+          :flag => 'combined',
+          :extension => 'css.haml',
+        },
+        "/assets/css/#{profile}/combined/",  # identifier
+        :binary => false
+      )
+    end
+
     def combined_css_item(profile)
       @items.find { |i| i.identifier == "/assets/css/#{profile}/combined/" }
     end
