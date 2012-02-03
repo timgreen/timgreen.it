@@ -1,0 +1,32 @@
+.box-shadow(@style, @c) when (iscolor(@c)) {
+  box-shadow:         @style @c;
+  -moz-box-shadow:    @style @c;
+  -webkit-box-shadow: @style @c;
+}
+.box-shadow(@style, @alpha: 50%) when (isnumber(@alpha)) {
+  .box-shadow(@style, rgba(0, 0, 0, @alpha));
+}
+
+
+.rounded-corners(@radius: 5px) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
+
+// Flexbox
+.display-box() {
+  display: box;
+  display: -moz-box;
+  display: -webkit-box;
+}
+.box-orient(@style) {
+  box-orient: @style;
+  -moz-box-orient: @style;
+  -webkit-box-orient: @style;
+}
+.box-flex(@style) {
+  box-flex: @style;
+  -moz-box-flex: @style;
+  -webkit-box-flex: @style;
+}

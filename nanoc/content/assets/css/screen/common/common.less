@@ -1,0 +1,38 @@
+a {
+  text-decoration: none;
+  color: #219B42;
+  &:link {
+    text-decoration: none;
+    color: #219B42;
+  }
+  &:hover,
+  &:active {
+    color: #115624;
+    text-decoration: underline;
+  }
+  &:visited {
+    color: #1A7E34;
+    text-decoration: none;
+  }
+}
+
+.nav-list {
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    display: inline;
+  }
+}
+.nav-list-with-sep {
+  li {
+    &::after {
+      content: "\007C";
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    &:last-child::after {
+      content: "\0020";
+    }
+  }
+}

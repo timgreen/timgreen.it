@@ -11,8 +11,10 @@
     <%= render 'ga' %>
   </head>
   <body>
-    <%= render 'header' %>
-    <div id="main"><%= yield %></div>
-    <%= render 'footer' %>
+    <div id="body-wrapper">
+      <%= render 'header' %>
+      <div id="main"><%= yield %></div>
+      <%= render 'footer' %>
+    </div>
   </body>
 </html>

@@ -1,0 +1,64 @@
+@import "../define/import";
+
+#header {
+  padding: @page-padding 0;
+
+  @logo-h: 50px;
+  .logo {
+    display: inline-block;
+    height: @logo-h;
+    line-height: @logo-h;
+    font-size: 65px;
+    margin-right: 20px;
+    overflow: hidden;
+    letter-spacing: -4px;
+
+    &:hover {
+      text-decoration: none;
+    }
+    .timgreen {
+      color: #169538;
+      font-weight: bold;
+    }
+    .amp {
+      color: #A5A5A5;
+      font-size: 20%;
+      vertical-align: middle;
+    }
+    .it {
+      color: #000;
+
+    }
+  }
+
+  .site-description {
+    color: #A5A5A5;
+    letter-spacing: -1px;
+    font-family: @font-family-title;
+    font-weight: bold;
+  }
+}
+
+#nav {
+  margin: 10px 0;
+  background-color: #000;
+  padding: 0 10px;
+  font-size: @font-size-nav;
+  font-family: @font-family-title;
+
+  a {
+    @nav-item-color: #DDD;
+    display: inline-block;
+    line-height: 38px;
+    padding: 0 10px;
+    color: @nav-item-color;
+    font-weight: bold;
+
+    &:hover,
+    &:active {
+      text-decoration: none;
+      background-color: #444;
+      color: @nav-item-color;
+    }
+  }
+}

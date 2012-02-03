@@ -27,6 +27,11 @@ task :ac do
   system('nanoc', 'autocompile')
 end
 
+desc 'View'
+task :view do
+  system('nanoc', 'view')
+end
+
 
 task :default => [:compile]
 task :validate => ['validate:html']

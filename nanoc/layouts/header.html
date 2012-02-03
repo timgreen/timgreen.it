@@ -1,2 +1,18 @@
 <header id="header">
+  <div class="banner">
+    <a href="<%= @site.config['base_url'] %>" class="logo">
+      <span class="timgreen">Tim Green</span>
+      <span class="amp">&amp;</span>
+      <span class="it">IT</span>
+    </a>
+    <span class="site-description">
+      life with IT
+    </span>
+  </div>
+  <nav id="nav">
+    <ul class="nav-list">
+      <li><a href="#">Blog</a></li><%#
+    %><li><a href="<%= urlForItem('/about') %>">About</a></li>
+    </ul>
+  </nav>
 </header>
