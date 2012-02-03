@@ -32,6 +32,7 @@ help 了一下, 发现了选项 `g:CommandTMatchWindowAtTop`
 
 所以在 *vimrc* 中加上
 
+{:lang="vim"}
     let g:CommandTMatchWindowAtTop = 1
 
 ps: 另外还有一个选项 `g:ommandTMatchWindowReverse`, 依然保持 __Match Window__ 在 bottom, 但将 list 倒过来应该也会有人喜欢.
@@ -47,6 +48,7 @@ ps: 另外还有一个选项 `g:ommandTMatchWindowReverse`, 依然保持 __Match
 
 对于第二种情况, help 了一下找到一个变量`b:NERDTreeRoot`可以用, 所以合在一起就是
 
+{:lang="vim"}
     "" Command-T
     function SmartCommandT()
       if exists("b:NERDTreeRoot")
@@ -62,20 +64,21 @@ ps: 另外还有一个选项 `g:ommandTMatchWindowReverse`, 依然保持 __Match
 
 在翻 NERDTree 的 help 时看到, 还可以对 NERDTree 的 node 加 action, e.g.
 
+{:lang="vim"}
     call NERDTreeAddKeyMap({
-            \ 'key': 'f',
-            \ 'callback': 'CommandTCurrentNERDTreeNode',
-            \ 'quickhelpText': 'CommandT on current node' })
+        \ 'key': 'f',
+        \ 'callback': 'CommandTCurrentNERDTreeNode',
+        \ 'quickhelpText': 'CommandT on current node' })
 
     function! CommandTCurrentNERDTreeNode()
-        let n = g:NERDTreeDirNode.GetSelected()
-        if n != {}
-            exec 'CommandT ' . n.path.str()
-        endif
+      let n = g:NERDTreeDirNode.GetSelected()
+      if n != {}
+        exec 'CommandT ' . n.path.str()
+      endif
     endfunction
 
-在光标在 NERDTree 的 dirnode 上时, 按`f`, 就可以在选中的目录上打开 __CommandT__.
+在光标在 NERDTree 的 dirnode 上时, 按<kbd>f</kbd>, 就可以在选中的目录上打开 __CommandT__.
 
 
-[NERDTree]: http://github.com/scrooloose/nerdtree
+[NERDTree]: https://github.com/scrooloose/nerdtree
 [CommandT]: https://wincent.com/products/command-t

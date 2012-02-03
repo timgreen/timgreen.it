@@ -1,0 +1,8 @@
+%h1= "blog"
+
+.blog-page
+  %ul
+    - blog_year_items.each do |item|
+      - url= urlForItem(item.identifier)
+      %li
+        %a(href="#{url}" title="#{item[:title]}")= item[:title]

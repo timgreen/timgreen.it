@@ -1,0 +1,9 @@
+%h1
+  = "'#{year}-#{month}' Articles"
+
+.month-page
+  %ul
+    - blog_items_in(year, month).each do |item|
+      - url= urlForItem(item.identifier)
+      %li
+        %a(href="#{url}" title="#{item[:title]}")= item[:title]

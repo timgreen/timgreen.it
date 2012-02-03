@@ -22,9 +22,9 @@ module TaggingExtra
   def create_tag_pages
     tag_set.each do |tag|
       items << Nanoc3::Item.new(
-        "= render('tag_page', :tag => '#{tag}')",        # use locals to pass data
-        { :title => "Tag: #{tag}", :is_hidden => true},  # do not include in sitemap.xml
-        "/tags/#{tag}/",                                 # identifier
+        "= render('template/tag_page', :tag => '#{tag}')",  # use locals to pass data
+        { :title => "Tag: #{tag}", :is_hidden => true},     # do not include in sitemap.xml
+        "/tags/#{tag}/",                                    # identifier
         :binary => false
       )
     end
