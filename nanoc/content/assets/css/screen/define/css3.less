@@ -1,17 +1,29 @@
-.box-shadow(@style, @c) when (iscolor(@c)) {
-  box-shadow:         @style @c;
-  -moz-box-shadow:    @style @c;
-  -webkit-box-shadow: @style @c;
-}
-.box-shadow(@style, @alpha: 50%) when (isnumber(@alpha)) {
-  .box-shadow(@style, rgba(0, 0, 0, @alpha));
+// box-shadow
+.box-shadow(@style) {
+  box-shadow:         @style;
+  -moz-box-shadow:    @style;
+  -webkit-box-shadow: @style;
 }
 
+// text-shadow
+.text-shadow(@style) {
+  text-shadow:         @style;
+  -moz-text-shadow:    @style;
+  -webkit-text-shadow: @style;
+}
 
-.rounded-corners(@radius: 5px) {
+// border-radius
+.border-radius(@radius: 5px) {
   border-radius: @radius;
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
+}
+
+// user-select
+.user-select(@style) {
+  user-select: @style;
+  -moz-user-select: @style;
+  -webkit-user-select: @style;
 }
 
 // Flexbox
