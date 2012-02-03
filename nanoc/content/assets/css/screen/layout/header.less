@@ -1,11 +1,16 @@
 @import "../define/import";
 
 #header {
-  padding: @page-padding 0;
+  padding: @page-padding 0 0 0;
+
+  .banner {
+    .display-box;
+  }
 
   @logo-h: 50px;
   .logo {
     display: inline-block;
+    .box-flex(0);
     height: @logo-h;
     line-height: @logo-h;
     font-size: 65px;
@@ -32,10 +37,33 @@
   }
 
   .site-description {
+    .box-flex(0);
     color: #A5A5A5;
     letter-spacing: -1px;
     font-family: @font-family-title;
     font-weight: bold;
+  }
+
+  .rest {
+    .box-flex(1);
+  }
+
+  .social-links {
+    text-align: right;
+
+    a {
+      text-indent: 9999px;
+      overflow: hidden;
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+    }
+    .feed {
+      background-image: <%= imageUrl('header/rss.png') %>;
+    }
+    .twitter {
+      background-image: <%= imageUrl('header/twitter.png') %>;
+    }
   }
 }
 

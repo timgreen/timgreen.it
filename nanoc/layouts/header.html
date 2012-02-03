@@ -1,6 +1,6 @@
 <header id="header">
   <div class="banner">
-    <a href="<%= @site.config['base_url'] %>" class="logo">
+    <a href="<%= urlForItem('/') %>" class="logo">
       <span class="timgreen">Tim Green</span>
       <span class="amp">&amp;</span>
       <span class="it">IT</span>
@@ -8,6 +8,12 @@
     <span class="site-description">
       life with IT
     </span>
+    <div class="rest">
+      <ul class="social-links nav-list">
+        <li><a class="twitter" href="https://twitter.com/iamtimgreen" title="Twitter">Twitter</a></li>
+        <li><a class="feed" href="<%= urlForItem('/feed') %>" title="RSS Feed">Feed</a></li>
+      </ul>
+    </div>
   </div>
   <nav id="nav">
     <ul class="nav-list">

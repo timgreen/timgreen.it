@@ -24,6 +24,11 @@ module Helpers
       digest_for_item(combined_css_item(profile))
     end
 
+    def imageUrl(path)
+      # Remove .png, .jpg
+      id = '/assets/images/' + path.split('.')[0..-2].join('.')
+      "url(#{urlForItem(id)})"
+    end
   end
 end
 

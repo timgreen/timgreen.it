@@ -19,6 +19,7 @@ compile '/assets/css/*' do
     filter :haml
     filter :yui_compress
   elsif item[:extension] == 'less'
+    filter :erb
     filter :less
   elsif item[:extension] == 'css.haml'
     filter :haml
