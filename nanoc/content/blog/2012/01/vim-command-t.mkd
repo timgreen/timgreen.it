@@ -1,8 +1,9 @@
 ---
 kind: 'article'
-created_at: 2012/01/20 21:30:31
+created_at: 2012-01-20 21:30:31 +8
 title: 'Vim commandT'
 tags: [vim]
+publish: true
 ---
 随着公司 repo 中代码量的增长, 在 vim 里面要找到一个文件是越来越难了. [NERDTree][] 自然是必不可少的, 但对于过深的子目录还是无能为力. Search 了一番, 最后在[这里](http://stevelosh.com/blog/2010/09/coming-home-to-vim/#peepopen)找里了 [CommandT][]
 
@@ -18,7 +19,9 @@ tags: [vim]
 
 ## Install CommandT
 
-推荐以 pathogen bundle 安装, 详见 [doc](http://git.wincent.com/command-t.git/blob_plain/HEAD:/doc/command-t.txt) 中的 "MANAGING USING PATHOGEN".  安装后要记得 `rake make` 来编译 c extension.
+   * Vim 需要有 Ruby support. 执行 `vim --version` 查看是否有 +ruby 选项. 如果需要自己编译 vim, 请走[传送门][CompileVim].
+   * 推荐以 pathogen bundle 安装, 详见 [doc](http://git.wincent.com/command-t.git/blob_plain/HEAD:/doc/command-t.txt) 中的 "MANAGING USING PATHOGEN".
+   * 安装后要记得在 *~/.vim/bundle/command-t* 执行 `rake make` 来编译 c extension.
 
 ## Config CommandT (with NERDTree)
 
@@ -79,6 +82,40 @@ ps: 另外还有一个选项 `g:ommandTMatchWindowReverse`, 依然保持 __Match
 
 在光标在 NERDTree 的 dirnode 上时, 按<kbd>f</kbd>, 就可以在选中的目录上打开 __CommandT__.
 
+## Usage
+
+呼出 CommandT 后, 就可以通过输入对选中目录中的文件进行过滤.
+
+![commandT](http://pic.yupoo.com/timgreen/BIEIYRQi/medish.jpg)
+
+![filter with commandT](http://pic.yupoo.com/timgreen/BIEIZ8nj/medish.jpg)
+
+### Common Shortcuts
+
+<kbd>Ctrl</kbd>+<kbd>u</kbd>
+: 清空 __Prompt__ 栏
+
+<kbd>Enter</kbd>
+: 打开选中的文件
+
+<kbd>Ctrl</kbd>+<kbd>Enter</kbd>, <kbd>Ctrl</kbd>+<kbd>s</kbd>
+: 在分割窗口中打开选中的文件
+
+<kbd>Ctrl</kbd>+<kbd>v</kbd>
+: 在垂直分割窗口中打开选中的文件
+
+<kbd>Ctrl</kbd>+<kbd>t</kbd>
+: 在新Tab中打开选中的文件
+
+<kbd>Ctrl</kbd>+<kbd>j</kbd>, <kbd>Ctrl</kbd>+<kbd>n</kbd>, <kbd>Down</kbd>
+: 选择 __Match Window__ 中的下一个文件
+
+<kbd>Ctrl</kbd>+<kbd>k</kbd>, <kbd>Ctrl</kbd>+<kbd>p</kbd>, <kbd>Up</kbd>
+: 选择 __Match Window__ 中的上一个文件
+
+<kbd>Ctrl</kbd>+<kbd>c</kbd>, <kbd>Esc</kbd>
+: Cancel
 
 [NERDTree]: https://github.com/scrooloose/nerdtree
 [CommandT]: https://wincent.com/products/command-t
+[CompileVim]: http://stackoverflow.com/questions/3794895/installing-vim-with-ruby-support-ruby

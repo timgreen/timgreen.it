@@ -5,7 +5,7 @@ module Blogging
 
   def blog_items
     @items.select do |item|
-      item.identifier =~ /^\/blog\/\d{4,}\/\d{2,}\/.+\/$/
+      (item.identifier =~ /^\/blog\/\d{4,}\/\d{2,}\/.+\/$/) and (item[:kind]  == 'article')
     end
   end
 

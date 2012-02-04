@@ -56,6 +56,8 @@ compile '/blog/*' do
     filter :colorize_syntax, :default_colorizer => :pygmentize
     layout 'blog'
     layout 'default'
+  elsif item.binary?
+    # don’t filter binary items
   else
     filter :haml
     layout 'default'
