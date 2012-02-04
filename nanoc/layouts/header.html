@@ -22,4 +22,14 @@
     %><li><a href="<%= urlForItem('/about') %>">About</a></li>
     </ul>
   </nav>
+  <% if item.identifier != '/' %>
+  <div id="breadcrumbs">
+    <ul class="nav-list nav-list-with-sep breadcrumbs-list">
+      <li><a href="<%= urlForItem('/')%>">home</a></li><%#
+    %><% breadcrumbs_for(item).each do |i| %><%#
+    %><li><%= link_to_unless_current(i.identifier.split('/').last, i, :title => i[:title]) %></li><%#
+    %><% end %>
+    </ul>
+  </div>
+  <% end %>
 </header>
