@@ -13,7 +13,7 @@
       <span class="icon-tags" title="Tags">&nbsp;</span>
       <ul class="tags nav-list nav-list-with-sep">
         <% item[:tags].each do |tag| %>
-        <li><a class="tag" href="<%= urlForTag(tag) %>"><%= tag %></a></li>
+        <li><a class="tag" href="<%= url_for_tag(tag) %>"><%= tag %></a></li>
         <% end %>
       </ul>
     </div>

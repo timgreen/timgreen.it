@@ -19,7 +19,7 @@ module TaggingExtra
   end
 
   def tag_items
-    tag_set.map { |t| itemFor("/tags/#{t}") }
+    tag_set.map { |t| item_for("/tags/#{t}") }
   end
 
   def create_tag_pages

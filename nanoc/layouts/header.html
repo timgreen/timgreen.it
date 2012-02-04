@@ -1,6 +1,6 @@
 <header id="header">
   <div class="banner">
-    <a href="<%= urlForItem('/') %>" class="logo">
+    <a href="<%= url_for_item('/') %>" class="logo">
       <span class="timgreen">Tim Green</span>
       <span class="amp">&amp;</span>
       <span class="it">IT</span>
@@ -11,21 +11,21 @@
     <div class="rest">
       <ul class="social-links nav-list">
         <li><a class="icon-social-twitter" href="https://twitter.com/iamtimgreen" title="Twitter">Twitter</a></li>
-        <li><a class="icon-social-feed" href="<%= urlForItem('/feed') %>" title="RSS Feed">Feed</a></li>
+        <li><a class="icon-social-feed" href="<%= url_for_item('/feed') %>" title="RSS Feed">Feed</a></li>
       </ul>
     </div>
   </div>
   <nav id="nav">
     <ul class="nav-list">
-      <li><a href="<%= urlForItem('/blog') %>">Blog</a></li><%#
-    %><li><a href="<%= urlForItem('/tags') %>">Tags</a></li><%#
-    %><li><a href="<%= urlForItem('/about') %>">About</a></li>
+      <li><a href="<%= url_for_item('/blog') %>">Blog</a></li><%#
+    %><li><a href="<%= url_for_item('/tags') %>">Tags</a></li><%#
+    %><li><a href="<%= url_for_item('/about') %>">About</a></li>
     </ul>
   </nav>
   <% if item.identifier != '/' %>
   <div id="breadcrumbs">
     <ul class="nav-list nav-list-with-sep breadcrumbs-list">
-      <li><a href="<%= urlForItem('/')%>">home</a></li><%#
+      <li><a href="<%= url_for_item('/')%>">home</a></li><%#
     %><% breadcrumbs_for(item).each do |i| %><%#
     %><li><%= link_to_unless_current(i.identifier.split('/').last, i, :title => i[:title]) %></li><%#
     %><% end %>

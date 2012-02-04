@@ -3,21 +3,21 @@ def item_by_id(id)
   @items.find { |i| i.identifier == id || i.identifier == (id + '/') }
 end
 
-def itemFor(id_or_item)
+def item_for(id_or_item)
   (id_or_item.is_a?(Nanoc3::Item) || id_or_item.is_a?(Nanoc3::ItemRep)) ? id_or_item : item_by_id(id_or_item)
 end
 
 
-def urlForItem(id_or_item)
-  itemFor(id_or_item).path
+def url_for_item(id_or_item)
+  item_for(id_or_item).path
 end
 
-def urlForTag(tag)
-  urlForItem("/tags/#{tag}")
+def url_for_tag(tag)
+  url_for_item("/tags/#{tag}")
 end
 
 def breadcrumbs_for(id_or_item)
-  i = itemFor(id_or_item)
+  i = item_for(id_or_item)
   if i.identifier == '/'
     []
   else
@@ -30,7 +30,7 @@ def link_to(text, target, attributes={})
   if target.is_a?(String)
     url = target
   else
-    url = urlForItem(target)
+    url = url_for_item(target)
     raise RuntimeError, "Cannot create a link to #{target.inspect} because this target is not outputted (its routing rule returns nil)" if url.nil?
   end
 
@@ -44,7 +44,7 @@ def link_to(text, target, attributes={})
 end
 
 def link_to_unless_current(text, target, attributes={})
-  if @item_rep && urlForItem(@item_rep) == urlForItem(target)
+  if @item_rep && url_for_item(@item_rep) == url_for_item(target)
     # Create message
     "<span class=\"active\" title=\"You're here.\">#{text}</span>"
   else
