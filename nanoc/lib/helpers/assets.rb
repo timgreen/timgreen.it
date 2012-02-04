@@ -25,6 +25,7 @@ module Helpers
         {
           :flag => 'combined',
           :extension => 'css.haml',
+          :is_hidden => true
         },
         "/assets/css/#{profile}/combined/",  # identifier
         :binary => false

@@ -41,11 +41,11 @@ compile '/assets/js/*' do
 end
 
 compile '/sitemap' do
-  filter :erb
+  filter :haml
 end
 
 compile '/feed' do
-  filter :erb
+  filter :haml
 end
 
 compile '/blog/*' do
@@ -55,18 +55,13 @@ compile '/blog/*' do
     filter :code_class_fix
     filter :colorize_syntax, :default_colorizer => :pygmentize
     layout 'blog'
-    layout 'default'
+    layout 'layout'
   elsif item.binary?
     # don’t filter binary items
   else
-    filter :haml
-    layout 'default'
+    filter :haml, :format => :html5
+    layout 'layout'
   end
-end
-
-compile '/tags/*' do
-  filter :haml
-  layout 'default'
 end
 
 compile '*' do
@@ -77,10 +72,10 @@ compile '*' do
 
     if ext == 'erb'
       filter :erb
-    elsif ext == 'haml'
-      filter :haml
+    else
+      filter :haml, :format => :html5
     end
-    layout 'default'
+    layout 'layout'
   end
 end
 
@@ -113,5 +108,4 @@ route '*' do
 end
 
 # Layout
-layout '/template/*', :haml
-layout '*', :erb
+layout '*', :haml, :format => :html5

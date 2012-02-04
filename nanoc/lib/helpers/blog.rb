@@ -3,6 +3,22 @@ module Blogging
 
   require 'set'
 
+  def newer_article(ref_item=nil)
+    ref_item ||= item
+    @sorted_articles ||= sorted_articles
+    index = @sorted_articles.index(ref_item)
+
+    (index - 1 >= 0) ? @sorted_articles[index - 1] : nil
+  end
+
+  def older_article(ref_item=nil)
+    ref_item ||= item
+    @sorted_articles ||= sorted_articles
+    index = @sorted_articles.index(ref_item)
+    n = @sorted_articles.length
+    (index + 1 < n) ? @sorted_articles[index + 1] : nil
+  end
+
   def blog_items
     @items.select do |item|
       (item.identifier =~ /^\/blog\/\d{4,}\/\d{2,}\/.+\/$/) and (item[:kind]  == 'article')

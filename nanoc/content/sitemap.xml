@@ -1,1 +1,0 @@
-<%= xml_sitemap :items => @items.select{ |i| !i[:is_hidden] && i[:extension] =~ /(html|mkd)/ } %>

@@ -1,0 +1,26 @@
+%header#header
+  .banner
+    %a.logo{:href => url_for_item('/')}
+      %span.timgreen Tim Green
+      %span.amp &amp;
+      %span.it IT
+    %span.site-description life with IT
+    .rest
+      %ul.social-links.nav-list
+        %li
+          %a.icon-social-twitter(href="https://twitter.com/iamtimgreen" title="Twitter") Twitter
+          %a.icon-social-feed(title="RSS Feed"){:href => url_for_item('/feed')} Feed
+  %nav#nav
+    %ul.nav-list
+      %li><
+        %a{:href => url_for_item('/blog')} Blog
+      %li><
+        %a{:href => url_for_item('/tags')} Tags
+      %li><
+        %a{:href => url_for_item('/about')} About
+  - if item.identifier != '/'
+    #breadcrumbs
+      %ul.nav-list.nav-list-with-sep.breadcrumbs-list
+        %li>= link_to('home', url_for_item('/'))
+        - breadcrumbs_for(item).each do |i|
+          %li>= link_to_unless_current(i.identifier.split('/').last, i, :title => i[:title])
