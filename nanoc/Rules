@@ -48,6 +48,10 @@ compile '/feed' do
   filter :haml
 end
 
+compile '/robots' do
+  filter :erb
+end
+
 compile '/blog/*' do
   if item[:kind] == 'article'
     filter :kramdown
@@ -95,6 +99,10 @@ end
 
 route '/feed' do
   item.identifier.chop + '.xml'
+end
+
+route '/robots' do
+  item.identifier.chop + '.txt'
 end
 
 route '*' do
