@@ -7,6 +7,9 @@ def item_for(id_or_item)
   (id_or_item.is_a?(Nanoc3::Item) || id_or_item.is_a?(Nanoc3::ItemRep)) ? id_or_item : item_by_id(id_or_item)
 end
 
+def tag_item_for(tag)
+  item_for("/tags/#{tag}")
+end
 
 def url_for_item(id_or_item)
   item_for(id_or_item).path

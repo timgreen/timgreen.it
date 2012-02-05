@@ -1,21 +1,28 @@
 %article
   %header
     %h1.title= item[:title]
-    .publish-time-container
-      %span.icon-publish-time(title="Publish time") &nbsp;
-      %span.publish-time= attribute_to_time(item[:created_at])
+    .meta
+      .publish-time-container
+        %span.icon-publish-time(title="Publish time") &nbsp;
+        %span.publish-time= attribute_to_time(item[:created_at])
+      - if not item[:tags].nil?
+        .tags-container
+          .icon-tags(title="Tags") &nbsp;
+          %ul.tags.nav-list.nav-list-with-sep
+            - item[:tags].each do |tag|
+              %li
+                = link_to(tag, url_for_tag(tag), :title => tag_item_for(tag)[:title])
   #content<= yield
-  %footer
-    - if not item[:tags].nil?
-      .tags-container
-        .icon-tags(title="Tags") &nbsp;
-        %ul.tags.nav-list.nav-list-with-sep
-          - item[:tags].each do |tag|
-            %li= link_to(tag, url_for_tag(tag))
-%aside
+%aside.article-nav
   - prev_item = older_article
-  - if prev_item
-    = link_to(prev_item[:title], prev_item, :class => "prev")
+  .prev
+    - if prev_item
+      = link_to(prev_item[:title], prev_item, :title => prev_item[:title])
+    - else
+      No Older
   - next_item = newer_article
-  - if next_item
-    = link_to(next_item[:title], next_item, :class => "next")
+  .next
+    - if next_item
+      = link_to(next_item[:title], next_item, :title => next_item[:title])
+    - else
+      No Newer

@@ -21,6 +21,6 @@
   - if item.identifier != '/'
     #breadcrumbs
       %ul.nav-list.nav-list-with-sep.breadcrumbs-list
-        %li>= link_to('home', url_for_item('/'))
+        %li>= link_to('home', url_for_item('/'), :title => 'home')
         - breadcrumbs_for(item).each do |i|
           %li>= link_to_unless_current(i.identifier.split('/').last, i, :title => i[:title])

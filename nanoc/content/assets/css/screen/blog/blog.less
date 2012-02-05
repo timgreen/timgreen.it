@@ -2,6 +2,7 @@
 
 .publish-time-container,
 .tags-container {
+  display: inline-block;
   line-height: 16px;
   height: 16px;
 }
@@ -20,5 +21,23 @@
 
   li::after {
     content: ',';
+  }
+}
+
+.article-nav {
+  .display-box;
+  .prev {
+    .box-flex(1);
+    text-align: left;
+    &::before {
+      content: '\2039\00a0';
+    }
+  }
+  .next {
+    .box-flex(1);
+    text-align: right;
+    &::after {
+      content: '\00a0\203A';
+    }
   }
 }
