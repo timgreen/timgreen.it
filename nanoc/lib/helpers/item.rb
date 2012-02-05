@@ -15,6 +15,10 @@ def url_for_item(id_or_item)
   item_for(id_or_item).path
 end
 
+def full_url_for_item(id_or_item)
+  @config[:base_url] + url_for_item(id_or_item)
+end
+
 def url_for_tag(tag)
   url_for_item("/tags/#{tag}")
 end

@@ -13,6 +13,7 @@
               %li
                 = link_to(tag, url_for_tag(tag), :title => tag_item_for(tag)[:title])
   #content<= yield
+
 %aside.article-nav
   - prev_item = older_article
   .prev
@@ -26,3 +27,16 @@
       = link_to(next_item[:title], next_item, :title => next_item[:title])
     - else
       No Newer
+
+#comments.comments
+  #disqus_thread
+    :javascript
+      var disqus_shortname = '#{@config[:disqus_shortname]}';
+      var disqus_identifier = '#{item.identifier}';
+      var disqus_url = '#{full_url_for_item(item)}';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+

@@ -17,7 +17,7 @@ index_filenames: [ 'index.html' ]
 # Whether or not to generate a diff of the compiled content when compiling a
 # site. The diff will contain the differences between the compiled content
 # before and after the last site compilation.
-enable_output_diff: false
+enable_output_diff: true
 
 base_url: http://timgreen.it
 title: Tim Green & IT
@@ -67,3 +67,6 @@ watcher:
 deploy:
   default:
     dst: "timgreen.it:www/timgreen.it"
+
+# Disqus
+disqus_shortname: timgreenit
