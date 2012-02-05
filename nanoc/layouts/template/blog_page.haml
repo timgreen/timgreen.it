@@ -3,6 +3,5 @@
 .blog-page
   %ul
     - blog_year_items.each do |item|
-      - url= url_for_item(item)
       %li
-        %a(href="#{url}" title="#{item[:title]}")= item[:title]
+        = link_to(item[:title], item, :title => item[:title])

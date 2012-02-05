@@ -55,7 +55,7 @@ module Blogging
       items << Nanoc3::Item.new(
         "= render('template/blog_month_page', :year => '#{year}', :month => '#{month}')",
         {
-          :title => "Articles: #{year}-#{month}",
+          :title => "Archives: #{year}-#{month}",
           :is_hidden => true
         },
         "/blog/#{year}/#{month}/", # identifier
@@ -74,7 +74,7 @@ module Blogging
       items << Nanoc3::Item.new(
         "= render('template/blog_year_page', :year => '#{year}')",
         {
-          :title => "Articles: #{year}",
+          :title => "Archives: #{year}",
           :is_hidden => true
         },
         "/blog/#{year}/", # identifier

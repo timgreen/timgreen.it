@@ -1,9 +1,8 @@
 %h1
-  = "'#{tag.capitalize}' Articles"
+  = "Archives tag: '#{tag.capitalize}'"
 
 .tag-page
   %ul
     - items_with_tag(tag).each do |item|
-      - url= url_for_item(item)
       %li
-        %a(href="#{url}" title="#{item[:title]}")= item[:title]
+        = link_to(item[:title], item, :title => item[:title])
