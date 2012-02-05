@@ -63,7 +63,7 @@ compile '/blog/*' do
   elsif item.binary?
     # don’t filter binary items
   else
-    filter :haml, :format => :html5
+    filter :haml, :format => :html5, :ugly => true
     layout 'layout'
   end
 end
@@ -77,7 +77,7 @@ compile '*' do
     if ext == 'erb'
       filter :erb
     else
-      filter :haml, :format => :html5
+      filter :haml, :format => :html5, :ugly => true
     end
     layout 'layout'
   end
@@ -116,4 +116,4 @@ route '*' do
 end
 
 # Layout
-layout '*', :haml, :format => :html5
+layout '*', :haml, :format => :html5, :ugly => true
