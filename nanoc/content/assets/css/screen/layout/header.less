@@ -7,10 +7,13 @@
     .display-box;
   }
 
+  .logo-wrapper {
+    .box-flex(0);
+  }
+
   @logo-h: 50px;
   .logo {
     display: inline-block;
-    .box-flex(0);
     height: @logo-h;
     line-height: @logo-h;
     font-size: 65px;
@@ -36,7 +39,6 @@
   }
 
   .site-description {
-    .box-flex(0);
     color: #A5A5A5;
     letter-spacing: -1px;
     font-family: @font-family-title;
