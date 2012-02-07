@@ -1,0 +1,210 @@
+---
+kind: 'article'
+created_at: 2012-02-07 12:29:30 +8
+title: '用 Nanoc 来建立网站吧'
+tags: [nanoc]
+publish: true
+---
+在决定重新开 blog 后, 到底怎么来架这个网站, 真是让我小小的纠结了一把.
+简单对比了一圈各种 [Static WebSite Generators](http://iwantmyname.com/blog/2011/02/list-static-website-generators.html), 最后还是选择了 [Nanoc][] 来做这个网站.
+理由如下:
+
+* 基于 Ruby, 这个比较和我胃口的语言.
+* 可方便加入自定义的 filter.
+* 支持多级 layout.
+* 一个 item 可以有多个 rep.
+
+   我设想中就需要对每一个页面生成一个 html 和一个 json, json 数据用来配合 `history.pushState` 来实现无刷新的站内跳转.
+
+* 可以在 preprocess 时生成 virtual item(s).
+
+   这是一个相当实用的功能, 可以用于生成某个 tag 的文章列表页或者是某个月的文章列表页, 而不用再新建一堆没有营养的 placehold page.
+
+## Install Nanoc
+
+Nanoc 是用 Ruby 写的, 推荐先[安装 rvm](http://beginrescueend.com/rvm/install/), 再通过 `gem install nanoc` 安装.
+
+在使用时可能还会用到更多的 gems, 这是我的 `Gemfile`, 可以直接通过 `bundle install` 安装.
+
+{:lang="ruby"}
+    source :rubygems
+
+    gem 'adsf'
+    gem 'builder'
+    gem 'haml'
+    gem 'kramdown'
+    gem 'less'
+    gem 'mime-types'
+    gem 'nanoc'
+    gem 'nokogiri'
+    gem 'pygmentize'
+    gem 'systemu'
+    gem 'w3c_validators'
+    gem 'yui-compressor'
+
+   * 'adsf' 是运行 `nanoc view` 需要的.
+   * 'haml' 和 'kramdown' 分别为加入 [haml][] 和 [markdown][] 支持.
+   * 'pygmentize' 是用来语法高亮 code block 的.
+   * 'less', 'yui-compressor' 是用来将多个 [less][] 文件编译成一个 css 的.
+
+## Start with Nanoc
+
+先跟着官网的 [getting started](http://nanoc.stoneship.org/docs/3-getting-started/) 熟悉一下如何快速新建一个网站,
+再通过 [basic concepts](http://nanoc.stoneship.org/docs/4-basic-concepts/) 来了解 Nanoc 的一些基本概念, 如 'item', 'rep', 'layout', 'filter', 'Rules'等等.
+
+## Play with Nanoc
+
+按官网的说明, Nanoc 的编译流程为
+
+<figure>
+  <dot>
+  digraph G {
+    step1label [shape=none, label="Step 1"];
+    step2label [shape=none, label="Step 2"];
+    step3label [shape=none, label="Step 3"];
+    step4label [shape=none, label="Step 4"];
+    step5label [shape=none, label="Step 5"];
+
+    step1 [shape=box, label="Loading the Site Data"];
+    step2 [shape=box, label="Peprocessing the site data"];
+    step3 [shape=box, label="Building the item representations"];
+    step4 [shape=box, label="Routing the item representations"];
+    step5 [shape=box, label="Compiling the item representations"];
+
+    step1 -> step2 -> step3 -> step4 -> step5;
+    step1label -> step2label -> step3label -> step4label -> step5label;
+
+    {rank=same; step1label step1};
+    {rank=same; step2label step2};
+    {rank=same; step3label step3};
+    {rank=same; step4label step4};
+    {rank=same; step5label step5};
+  }
+  </dot>
+  <figcaption>The Nanoc Compilation Process</figcaption>
+</figure>
+
+值得注意的是, 这个流程事实上暗含了对各个 step 时可以访问数据的限定.
+
+一开始我并没有注意到. 在尝试将 `complied.css` 重命名为 `complied-${md5sum complied.css}.css` 失败后, 才意识到这一点.
+因为每一个 Item Rep 的文件名是在 step4 Routing 时确定的, 而计算 md5 所需要的 `compiled_content` 则是要等到 step5 时才可以使用.
+
+### Layout / filter Apply Chain
+
+Item Rep 编译过程, 可以看成是对一个初始的 `raw_content` 按顺序 apply 各种 filter 和 layout 的过程.
+
+下面是在写这篇文章时, 本站对 blog article item 的 Compile Rule. 不只是可以有多个 filter, 也可以有任意多个 layout.
+
+{:lang="ruby"}
+    filter :kramdown
+    filter :dot
+    filter :code_class_fix
+    filter :colorize_syntax, :default_colorizer => :pygmentize
+    layout 'blog'
+    layout 'layout'
+
+### Item Compilation Order / Dependences
+
+在一开始尝试写 filter 时, 发现可以使用其它 item\_rep 的 `compiled_content`. 我就很好奇 nanoc 是怎么处理 item 之间的 Dependences 的.
+翻看了一下 Nanoc 的 [code](https://github.com/ddfreyne/nanoc/blob/master/lib/nanoc/base/compilation/compiler.rb#L317), 发现那是相当的有意思.
+因为 Nanoc 并没有提供一种方式来指定 Dependency(也不需要), 所以只能是在运行时来处理.
+
+当遇到 call `item_rep.compiled_content` , item\_rep 还没有编译时, 就会 throw `Nanoc::Errors::UnmetDependency`. Nanoc 编译时先建了一张包含所有点没有边的图.
+然后每次取一点没有入度的点 a 出来, 尝试编译:
+
+   * 如果成功, 就将这个点从图中删除
+   * 如果编译中 call `b.compiled_content` 遇到 `Nanoc::Errors::UnmetDependency`, 就在图上加一条边 a -> b.
+
+然后重复这个过程直到没有没有入度的点了.
+
+简单说, Nanoc 可以自动处理 item\_rep 之间 Dependency 而不需要我们来操心.
+
+### Create Virtual Item(s) in Preprocess
+
+在写 blog 总是会标上相关的 tag, 如本篇的 tag 是 [vim](/tags/vim) 和 [nanoc](/tags/nanoc). 点击 tag 后应该是一张列出了所有包含这个 tag 的文章的页面.
+对于这种类型的页面, Nanoc 中可以在 Preprocess 时通过以下方式创建
+
+{:lang="ruby"}
+    items << Nanoc3::Item.new(
+      "...",                  # content
+      {
+        :title => "title",
+        :is_hidden => true,   # hidden for sitemap
+      },                      # meta
+      "identifier",           # identifier
+      :binary => false
+    )
+
+#### Create Tags Pages
+例如要建立所有的 /tags/\* 页面, 可以先在 *helper* 里加上辅助方法[^tags]
+
+{:lang="ruby"}
+    def tag_set(items=nil)
+      items = @items if items.nil?
+      tags = Set.new
+      items.each do |item|
+        next if item[:tags].nil?
+        item[:tags].each { |tag| tags << tag }
+      end
+      tags.to_a
+    end
+
+    def create_tag_pages
+      tag_set.each do |tag|
+        items << Nanoc3::Item.new(
+          "= render('template/tag_page', :tag => '#{tag}')",  # use locals to pass data
+          {
+            :title => "Tag: #{tag}",
+            :is_hidden => true,
+            :extension => 'haml'
+          },
+          "/tags/#{tag}/",                                    # identifier
+          :binary => false
+        )
+      end
+    end
+
+然后在 *Layout* 里加上 *template/tag_page.haml*
+
+{:lang="haml"}
+    %h1
+      = "Archives tag: '#{tag.capitalize}'"
+    .tag-page
+      %ul
+        - items_with_tag(tag).each do |item|
+          %li
+            = link_to(item[:title], item, :title => item[:title])
+
+最后在 *Rules* 里加上
+
+{:lang="ruby"}
+    preprocess do
+      # ...
+      create_tag_pages
+      # ...
+    end
+
+    compile '/tags/*' do
+      filter :haml, :format => :html5, :ugly => true
+      layout 'layout'
+    end
+
+    route '/tags/*' do
+      item.identifier + 'index.html'
+    end
+
+    # Layout
+    layout '*', :haml, :format => :html5, :ugly => true
+
+运行 `nanoc compile` 就可以看到 nanoc 自动生成了所有的 /tags/\* 页面.
+
+## Source code for timgreen.it
+
+如果需要一个完整的例子, 可以围观本站的 Source Code: <https://github.com/timgreen/timgreen.it>.
+
+[Nanoc]: http://nanoc.stoneship.org/
+[haml]: http://haml-lang.com/
+[markdown]: http://daringfireball.net/projects/markdown/
+[less]: http://lesscss.org/
+
+[^tags]: 这部分 code 来自 <https://github.com/mgutz/nanoc3_blog/blob/master/lib/helpers.rb>

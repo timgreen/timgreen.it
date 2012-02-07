@@ -10,7 +10,7 @@
           .icon-tags(title="Tags") &nbsp;
           %ul.tags.nav-list.nav-list-with-sep
             - item[:tags].each do |tag|
-              %li
+              %li><
                 = link_to(tag, url_for_tag(tag), :title => tag_item_for(tag)[:title])
   #content<= yield
 
