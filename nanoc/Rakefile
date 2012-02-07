@@ -32,6 +32,22 @@ task :view do
   system('nanoc', 'view')
 end
 
+desc 'Submit sitemap to search engines & Ping feedburner to update feed.'
+task :ping do
+  require 'cgi'
+
+  sitemap_path = 'http://timgreen.it/sitemap.xml'
+  # urls = [
+  #   'http://www.google.com/webmasters/tools/ping?sitemap=%s',  # Google
+  #   'http://search.yahooapis.com/SiteExplorerService/V1/ping?sitemap=%s', # Yahoo
+  #   'http://www.bing.com/webmaster/ping.aspx?siteMap=%s', # bing
+  #   'http://submissions.ask.com/ping?sitemap=%s', # Ask
+  #   'http://webmaster.live.com/ping.aspx?siteMap=%s', # Webmaster
+  # ]
+
+  `google-chrome "http://www.pingsitemap.com/?action=submit&url=#{CGI::escape sitemap_path}"`
+  `google-chrome "http://www.feedburner.com/fb/a/pingSubmit?bloglink=http%3A%2F%2Ftimgreen.it"`
+end
 
 task :default => [:compile]
 task :validate => ['validate:html']
