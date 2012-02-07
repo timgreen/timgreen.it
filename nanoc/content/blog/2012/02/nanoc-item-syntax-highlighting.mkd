@@ -1,0 +1,59 @@
+---
+kind: 'article'
+created_at: 2012-02-07 23:28:35 +8
+title: 'Nanoc item Vim Syntax Highlighting'
+tags: [nanoc, vim]
+publish: true
+---
+
+## Vim Syntax Problem
+在用 [vim][], [nanoc][], [kramdown][] 写 blog 的过程中, 一个很不爽的事是 vim 上的 syntax highlight 不正确.
+
+![vim nanoc syntax bad](http://pic.yupoo.com/timgreen/BJ5ovfSj/8BiG.png "vim nanoc syntax bad")
+
+问题就出在文件头部的 yaml meta data. 它并不是原文件的格式一部分, 所以造成了 syntax error.
+
+## One Approximate
+Google 了一下, 网上最相关的是[这个](http://oscar.morante.eu/2010/09/03/nanoc_s_filesystem_unified_markdown_syntax_highlighting.html).
+这篇文章的解决方法是修改 *syntax/markdown.vim*, 将 meta data 识别成 Comment.
+
+但这个方案有三点不美好的地方
+
+   * 需要修改系统 Syntax 文件或 Copy/Paste.
+   * 对于每种文件类型(如 css, less, haml), 都要修改对应的 syntax 文件.
+   * meta data 本身没有 syntax highlight.
+
+## My Solution
+所以我简单的写了一个 vim bundle <https://github.com/timgreen/vim-nanoc>. 安装后的效果
+
+![vim nanoc syntax](http://pic.yupoo.com/timgreen/BJ5osuHH/jt8xr.png "vim nanoc syntax")
+
+我只定义了一个 syntax *nanocitem.vim*. 然后通过 *filetype.vim* 检查文件头是不是包含 meta data. 如果第一行为`---`, 则认为是 _nanocitem_, 将 `filetype` 设为 *maintype.nanocitem*, 如 `markdown.nanocitem`.
+
+{:lang="vim"}
+    func! s:FTnanoc(maintype)
+      if getline(1) =~ '^---\s*$'
+        exec 'setf ' . a:maintype . '.nanocitem'
+        return
+      endif
+    endfunc
+
+    augroup filetypedetect
+      au BufNewFile,BufRead,BufWrite *.html call s:FTnanoc('html')
+      au BufNewFile,BufRead,BufWrite *.haml call s:FTnanoc('haml')
+      au BufNewFile,BufRead,BufWrite *.erb  call s:FTnanoc('erb')
+      " ...
+    augroup END
+
+我不确定这是不是一个标准做法, 但至少做到了三点
+
+   1. 在不破坏原有 syntax 的情况下, fix 了 nanoc item 的 syntax error.
+   1. 可以方便的加入其它 filetype 支持.
+   1. 不破坏其它针对原 filetype 的 功能, 如 [snipMate](https://github.com/msanders/snipmate.vim).
+
+一个可以想到的改进是, 自动检测 maintype. 这样就不用一个一个设了. 只是还没想到怎么做.
+
+
+[vim]: http://www.vim.org/
+[nanoc]: http://nanoc.stoneship.org/
+[kramdown]: http://kramdown.rubyforge.org/
