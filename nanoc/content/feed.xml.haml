@@ -1,4 +1,4 @@
 ---
 is_hidden: true
 ---
-= atom_feed :limit => 10
+= atom_feed :limit => 10, :content_proc => lambda { |a| feed_content_proc(a.compiled_content(:snapshot => :pre)) }

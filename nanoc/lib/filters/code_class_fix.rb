@@ -14,6 +14,6 @@ class CodeClassFixer < Nanoc3::Filter
       end
     end
 
-    doc.to_s
+    doc.to_html
   end
 end
