@@ -2,7 +2,22 @@
   = "Archives tag: '#{tag.capitalize}'"
 
 .tag-page
-  %ul
-    - items_with_tag(tag).each do |item|
-      %li
-        = link_to(item[:title], item, :title => item[:title])
+  - articles_to_paginate = items_with_tag(tag)
+  - subarticles = articles_to_paginate.slice(start..start + n - 1)
+  - subarticles.each do |item|
+    %article
+      .title= link_to(item[:title], item, :title => item[:title])
+      .meta
+        .publish-time-container
+          %span.icon-publish-time(title="Publish time") &nbsp;
+          %span.publish-time= attribute_to_time(item[:created_at])
+        - if not item[:tags].nil?
+          .tags-container
+            .icon-tags(title="Tags") &nbsp;
+            %ul.tags.nav-list.nav-list-with-sep
+              - item[:tags].each do |tag|
+                %li><
+                  = link_to(tag, url_for_tag(tag), :title => tag_item_for(tag)[:title])
+      .snippet
+        = snippet_for(item)
+        = link_to('read more &rarr;', item, :title => item[:title])

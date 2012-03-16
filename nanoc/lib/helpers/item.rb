@@ -20,7 +20,7 @@ def full_url_for_item(id_or_item)
 end
 
 def url_for_tag(tag)
-  url_for_item("/tags/#{tag}")
+  url_for_item(tag_item_for(tag))
 end
 
 def breadcrumbs_for(id_or_item)

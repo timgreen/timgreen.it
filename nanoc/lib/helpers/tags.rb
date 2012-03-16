@@ -24,16 +24,29 @@ module TaggingExtra
 
   def create_tag_pages
     tag_set.each do |tag|
-      items << Nanoc3::Item.new(
-        "= render('template/tag_page', :tag => '#{tag}')",  # use locals to pass data
-        {
-          :title => "Tag: #{tag}",
-          :is_hidden => true,
-          :extension => 'haml'
-        },
-        "/tags/#{tag}/",                                    # identifier
-        :binary => false
-      )
+      articles_to_paginate = items_with_tag(tag)
+      article_groups = []
+      until articles_to_paginate.empty?
+        article_groups << articles_to_paginate.slice!(0..@config[:page_size] - 1)
+      end
+
+      article_groups.each_with_index do |subarticles, i|
+        start = i * @config[:page_size]
+        n = subarticles.length
+
+        id = if (i == 0) then "/tags/#{tag}/" else "/tags/#{tag}/#{i + 1}" end
+
+        items << Nanoc3::Item.new(
+          "= render('template/tag_page', :tag => '#{tag}', :n => #{n}, :start => #{start}, :i => #{i})",
+          {
+            :title => "Tag: #{tag}",
+            :is_hidden => true,
+            :extension => 'haml'
+          },
+          id,
+          :binary => false
+        )
+      end
     end
   end
 
