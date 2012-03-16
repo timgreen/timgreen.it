@@ -1,0 +1,115 @@
+---
+kind: 'article'
+created_at: 2012-03-16 22:23:43 +8
+title: 'Math formulas in Nanoc'
+tags: [nanoc, latex]
+publish: true
+---
+
+作为一个技术博客, 如何显示数学公式是一个迟早都会遇到的问题. 到目前为止 latex 还是我是数学公式的不二选择. 以前用的是纯图片方案, 每次修改时还要先找回原来的 latex 公式, 修改, 再重新生成图片, 十分麻烦.
+
+这次我选择了 [MathJax][] + [Google Charts Api][GoogleChartsApi] 的组合方案:
+
+  * 在浏览器上使用 [MathJax][]
+  * 在 rss feed 里 fallback 到由 [Google Charts Api][GoogleChartsApi] render 的图片
+
+## MathJax
+
+> [MathJax][] is an open source JavaScript display engine for mathematics that works in all modern browsers.
+
+只要在页面里加载 MathJax.js 就可以自动识别 latex 公式了.
+
+下面两个 MathJax 的显示例子:
+
+### Display Mode
+
+`\\[`, `\\]` 之间的内容会被识别成 Display Mode 的 latex 公式.
+
+\\[ J\_\alpha(x) = \sum\limits\_{m=0}^\infty \frac{(-1)^m}{m! \, \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha} \\]
+
+Markdown Source:
+
+{:lang="text"}
+    ### Display Mode
+
+    `\\[`, `\\]` 之间的内容会被识别成 Display Mode 的 latex 公式.
+
+    \\[ J\_\alpha(x) = \sum\limits\_{m=0}^\infty \frac{(-1)^m}{m! \, \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha} \\]
+
+### Inline Mode
+
+`\\(`, `\\)` 之间的内容会被识别成 Inline Mode 的 latex 公式.
+
+勾股定理 \\(a^2 + b^2 = c^2\\).
+
+Markdown Source:
+
+{:lang="text"}
+    ### Inline Mode
+
+    `\\(`, `\\)` 之间的内容会被识别成 Inline Mode 的 latex 公式.
+
+    勾股定理 \\(a^2 + b^2 = c^2\\).
+
+## Google Charts Api
+
+对于 rss feed, 只要简单的用正则表达式将其替换成到 [Google Charts Api][GoogleChartsApi] 的 url 就好了.
+
+前面两个公式的图片版:
+
+![](https://chart.googleapis.com/chart?cht=tx&chl=+J_%5Calpha%28x%29+%3D+%5Csum%5Climits_%7Bm%3D0%7D%5E%5Cinfty+%5Cfrac%7B%28-1%29%5Em%7D%7Bm%21+%5C%2C+%5CGamma%28m+%2B+%5Calpha+%2B+1%29%7D%7B%5Cleft%28%7B%5Cfrac%7Bx%7D%7B2%7D%7D%5Cright%29%7D%5E%7B2+m+%2B+%5Calpha%7D+)
+
+![](https://chart.googleapis.com/chart?cht=tx&chl=a%5E2+%2B+b%5E2+%3D+c%5E2)
+
+### Updated feed.xml.haml
+
+原先的 *feed.xml.haml* 十分简单, 只是直接调用了 `Nanoc3::Helpers::Blogging` 中的 `atom_feed`
+
+{:lang="haml"}
+    = atom_feed :limit => 10
+
+为了替换公式, 则要改为
+
+{:lang="haml"}
+    = atom_feed :limit => 10, :content_proc => lambda { |a| feed_content_proc(a.compiled_content(:snapshot => :pre)) }
+
+`feed_content_proc` 的定义在 *helper/feed.rb* 里
+
+{:lang="ruby"}
+    module Feed
+
+      require 'nokogiri'
+      require 'cgi'
+
+      def feed_content_proc(content)
+        doc = Nokogiri::HTML.fragment(content)
+        feed_content_proc_do_node(doc)
+        doc.to_html
+      end
+
+      def feed_content_proc_do_node(node)
+        return if node.name == 'code'
+        if node.text?
+          html = node.text.gsub(/\\\[(.*?)\\\]/) do |w|
+            imgUrlForLatex($1)
+          end
+          html = html.gsub(/\\\((.*?)\\\)/) do |w|
+            imgUrlForLatex($1)
+          end
+          node.replace Nokogiri::HTML.fragment(html)
+        end
+        node.children.each do |node|
+          feed_content_proc_do_node(node)
+        end
+      end
+
+      def imgUrlForLatex(latex)
+        "<img src=\"https://chart.googleapis.com/chart?cht=tx&chl=#{CGI.escape(latex)}\"/>"
+      end
+
+    end
+
+    include Feed
+
+[MathJax]: http://www.mathjax.org
+[GoogleChartsApi]: http://code.google.com/intl/de-DE/apis/chart/infographics/docs/formulas.html
