@@ -1,0 +1,62 @@
+@import "../define/import";
+
+#scrollbar-toc {
+  @arrow-w: 10px;
+  @arrow-h: 10px;
+  @trigger-area-w: 100px;
+
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  li {
+    text-align: right;
+    position: absolute;
+    right: 0;
+    white-space: nowrap;
+
+    &::after {
+      content: ' ';
+      display: inline-block;
+      border-width: @arrow-h / 2 0 @arrow-h / 2 @arrow-w;
+      border-style: solid;
+      border-color: transparent;
+      border-left-color: @green;
+      width: 0;
+      height: 0;
+      margin-left: 0.5em;
+    }
+    &:last-child {
+      position: static;
+      visibility: hidden;
+    }
+  }
+
+  &.fold {
+    min-width: @trigger-area-w;
+    li {
+      &:last-child {
+        display: none;
+      }
+      span {
+        display: none;
+      }
+    }
+  }
+  &.fold:hover {
+    background: rgba(210, 211, 211, 0.8);
+    padding-left: 0.5em;
+    li {
+      &:last-child {
+        display: block;
+      }
+      span {
+        display: inline;
+      }
+    }
+  }
+}

@@ -15,3 +15,6 @@
       #main= yield
       = render 'footer'
     = render 'chrome-frame'
+    %script(type="text/javascript"){:src => url_for_item('/assets/compiled')}
+    :javascript
+      it.timgreen.Launcher.init();

@@ -25,7 +25,6 @@ build() {
       --jscomp_error=ambiguousFunctionDecl \
       --jscomp_error=checkDebuggerStatement \
       --jscomp_error=checkRegExp \
-      --jscomp_error=checkTypes \
       --jscomp_error=checkVars \
       --jscomp_error=const \
       --jscomp_error=constantProperty \
@@ -46,6 +45,8 @@ build() {
       --jscomp_error=visibility \
       --closure_entry_point=it.timgreen.Launcher \
       --js_output_file="$ROOT_DIR/content/assets/compiled.js"
+      #--jscomp_error=checkTypes \
+      #--formatting=PRETTY_PRINT \
 }
 
 build

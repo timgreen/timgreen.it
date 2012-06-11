@@ -39,6 +39,9 @@ end
 compile '/assets/js/*' do
   # don’t filter or layout
 end
+compile '/assets/compiled' do
+  # don’t filter or layout
+end
 
 compile '/sitemap' do
   filter :haml
@@ -91,6 +94,13 @@ route '/assets/css/*' do
   else
     nil
   end
+end
+
+route '/assets/js/*' do
+  nil
+end
+route '/assets/compiled' do
+  item.identifier.chop + '.js'
 end
 
 route '/sitemap' do

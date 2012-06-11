@@ -1,4 +1,4 @@
-%article
+%article#blog-article
   %header
     %h1.title= item[:title]
     .meta
@@ -39,5 +39,7 @@
         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
       })();
+
+%ul#scrollbar-toc
 
 %script(type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
