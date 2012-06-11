@@ -5,7 +5,11 @@ rescue LoadError
   require 'nanoc3/tasks'
 end
 
-task :compile_only do
+task :compile_js do
+  system('bash', '-c', 'scripts/compile_js.sh')
+end
+
+task :compile_only => [:compile_js] do
   system('nanoc', 'compile')
 end
 
@@ -23,7 +27,7 @@ desc 'Compile the site'
 task :compile => [:compile_only]
 
 desc 'Auto Compile'
-task :ac do
+task :ac => [:compile_js] do
   system('nanoc', 'autocompile')
 end
 
