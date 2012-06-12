@@ -63,12 +63,19 @@ it.timgreen.toc.TocScrollbar.prototype.init_ = function() {
  */
 it.timgreen.toc.TocScrollbar.prototype.calcPosition_ = function() {
   var bodyH = document.body.clientHeight;
-  if (this.bodyH_ === bodyH) return;
+  var vh = goog.dom.getViewportSize().height;
+  if ((this.bodyH_ === bodyH) && (this.vh_ === vh)) return;
   this.bodyH_ = bodyH;
+  this.vh_ = vh;
+  var halfLineHeight = 16 / 2;
 
   goog.array.forEach(this.toc_.getList(), function(item, i) {
-    var top = this.getOffsetTop_(item.getHeader());
-    var p = Math.min(top / bodyH * 100, 100);
+    var top = this.getOffsetTop_(item.getHeader()) - halfLineHeight;
+    if (vh < bodyH) {
+      var p = Math.min(top / bodyH * 100, 100);
+    } else {
+      var p = Math.min(top / vh * 100, 100);
+    }
     this.container_.children[i].style.top = p + '%';
   }, this);
 };
