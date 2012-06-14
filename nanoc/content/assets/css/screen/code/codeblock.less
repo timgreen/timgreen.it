@@ -3,10 +3,31 @@
 pre > code {
   display: block;
   overflow-x: auto;
-  padding: 10px;
+  @p: 10px;
+  padding: @p;
   white-space: pre;
   word-wrap: normal;
   .border-radius(10px);
+
+  &[lang] {
+    @h: 10px;
+    padding-top: 10px + @h;
+    ::before {
+      content: attr(lang);
+      display: block;
+      float: right;
+      color: white;
+      background: #42AEC2;
+      font-size: @h;
+      height: @h;
+      line-height: @h;
+      padding: 2px;
+      .border-radius(3px);
+      margin-top: -@h - @p / 2;
+      margin-right: -@p / 2;
+    }
+  }
+
   &::-webkit-scrollbar {
     height: 5px;
   }

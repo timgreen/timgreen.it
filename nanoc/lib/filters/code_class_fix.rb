@@ -11,6 +11,7 @@ class CodeClassFixer < Nanoc3::Filter
       code.parent.remove_attribute('lang')
       unless lang.nil?
         code['class'] = "#{code['class'] ? code['class'] + ' ': ''}language-#{lang} language"
+        code['lang'] = lang
       end
     end
 
