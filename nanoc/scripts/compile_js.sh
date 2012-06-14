@@ -44,7 +44,7 @@ build() {
       --jscomp_error=uselessCode \
       --jscomp_error=visibility \
       --closure_entry_point=it.timgreen.Launcher \
-      --js_output_file="$ROOT_DIR/content/assets/compiled.js"
+      #--js_output_file="$ROOT_DIR/content/assets/compiled.js"
       #--jscomp_error=checkTypes \
       #--formatting=PRETTY_PRINT \
 }

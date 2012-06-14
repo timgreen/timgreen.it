@@ -1,6 +1,8 @@
 
 def item_by_id(id)
-  @items.find { |i| i.identifier == id || i.identifier == (id + '/') }
+  i = @items.find { |i| i.identifier == id || i.identifier == (id + '/') }
+  return i if i
+  raise "can't find item for id '#{id}'"
 end
 
 def item_for(id_or_item)

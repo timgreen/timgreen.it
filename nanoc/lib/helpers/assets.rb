@@ -40,6 +40,26 @@ module Helpers
       digest_for_item(combined_css_item(profile))
     end
 
+    @@COMPILE_JS_SCRIPT = File.dirname(__FILE__) + "/../../scripts/compile_js.sh"
+    def compile_js
+      # make depends to all js source
+      @items.each { |i|
+        i.compiled_content if i.identifier.start_with?("/assets/js/")
+      }
+
+      require 'systemu'
+      stdout = StringIO.new
+      stderr = StringIO.new
+      cmd = [ 'bash', '-c', @@COMPILE_JS_SCRIPT ]
+      systemu cmd, 'stdin' => '', 'stdout' => stdout, 'stderr' => stderr
+      unless $? == 0
+        stderr.rewind
+        raise "Got error when compile js:\n\n#{stderr.string}"
+      end
+      stdout.rewind
+      stdout.string
+    end
+
     def image_url(path)
       # Drop .png, .jpg
       id = '/assets/images/' + path.split('.')[0..-2].join('.')
