@@ -5,6 +5,11 @@ rescue LoadError
   require 'nanoc3/tasks'
 end
 
+desc 'Download ga.js'
+task :download_ga_js do
+  system('wget', '-c', 'http://www.google-analytics.com/ga.js', '-O', 'content/assets/ga.js')
+end
+
 task :compile_only do
   system('nanoc', 'compile')
 end

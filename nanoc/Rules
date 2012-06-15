@@ -39,6 +39,9 @@ end
 compile '/assets/js/*' do
   # don’t filter or layout
 end
+compile '/assets/ga' do
+  # don’t filter or layout
+end
 compile '/assets/compiled_js' do
   filter :haml
 end
@@ -98,6 +101,9 @@ end
 
 route '/assets/js/*' do
   nil
+end
+route '/assets/ga' do
+  "/assets/ga.js"
 end
 route '/assets/compiled_js' do
   "/assets/compiled.js"
