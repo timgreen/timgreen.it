@@ -1,0 +1,44 @@
+---
+kind: 'article'
+created_at: 2012-06-15 21:26:07 +8
+title: 'Table of Content on Scrollbar'
+tags: [js, css]
+publish: true
+---
+
+这个网站上线后一直没有好好"装修"一下, 这两天终于抽空加上了 Table of Content. 效果是参考一个以前偶然看到的国外网站 [^site], 请看网页右边的 scrollbar 边上的小小绿色箭头们.
+
+## Snapshot
+
+为了防止我以后改了看不到了, 留一个截图先.
+
+[![toc on scrollbar](http://pic.yupoo.com/timgreen/C2JRvyea/medish.jpg)](http://pic.yupoo.com/timgreen/C2JRvyea/11Lx0D.png)
+
+简单的说就是在 scrollbar 的相应位置上标出 toc 中每一个 header item 的位置. 将内容的相对位置直观的表现在 scrollbar 上. 平时只显示箭头, mouse hover 时才显示内容.
+
+## Implementation
+
+实现是基于 [Google Closure][GoogleClosure], 具体的 code 可以在 [github](https://github.com/timgreen/timgreen.it/blob/master/nanoc/content/assets/js/it/timgreen/toc/TocScrollbar.js) 上找到.
+
+   * 先扫描得到所有的 header items, 我这里是 h1, h2, ... h6 标签
+   * 计算每一个 header item 在整个 body 中的位置(%)
+   * 通过 css 设置 toc item 的位置
+
+## Notes
+
+要想达到预想的效果, 要注意两点.
+
+### 必须要 Customise scrollbar style
+
+用 css3 定制 scrollbar 的目的不是为了美观, 而是为了控制 scrollbar-thumb 在 scrollbar-track[^scrollbar-css] 里精确的大小和位置, 以保证小箭头指向的位置是正确的. 当然现在只对 webkit 系有效.
+
+### 当 body 内容变化时, 位置需要重新计算
+
+当没有设 size 的 image 被显示评论被加载进来的时候, body 的 height 就会发生变化. header item 的相对位置也就需要重新计算了. 因为当前主流浏览器不支持除 window 以外元素的 onResize 事件, 所以我使用了定时 pull 的方式[^resize].
+
+
+[^site]: 那个网站的网址我忘记了, 如果有人知道这种做法的出处请告诉我, 我好更新一下.
+[^scrollbar-css]: Scrollbar 上不同 pieces 的说明请围观 [http://css-tricks.com/custom-scrollbars-in-webkit/]()
+[^resize]: 这也是 jQuery resize plugin 的实现方式, 另一种就是监听 DOMSubtreeModified 事件
+
+[GoogleClosure]: https://developers.google.com/closure/library/
