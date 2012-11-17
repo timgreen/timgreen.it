@@ -31,9 +31,9 @@ http {
     root deploy;
     #more_set_headers 'X-UA-Compatible: chrome=1';
 
-    location / {
-      FileETag on;
-    }
+    #location / {
+    #  FileETag on;
+    #}
 
     location /404/ {
       internal;
