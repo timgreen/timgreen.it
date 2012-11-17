@@ -1,0 +1,31 @@
+daemon off;
+
+http {
+  include mime.types;
+  index   index.html;
+
+  server {
+    server_name www.timgreen.it;
+    listen <%= ENV['PORT'] %>;
+    rewrite ^(.*) http://timgreen.it$1 permanent;
+  }
+  server {
+    server_name timgreen.it;
+    listen <%= ENV['PORT'] %>;
+    #access_log /var/log/nginx/timgreen.it.access.log;
+    #error_log /var/log/nginx/timgreen.it.error.log;
+
+    error_page 404 =404 /404/;
+
+    root ../deploy/;
+    more_set_headers 'X-UA-Compatible: chrome=1';
+
+    location / {
+      FileETag on;
+    }
+
+    location /404/ {
+      internal;
+    }
+  }
+}
