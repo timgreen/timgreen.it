@@ -1,11 +1,9 @@
+# Rake file for heroku
 
 desc 'Assets precompile'
 task "assets:precompile" do
-  Rake::Task.clear
-  nanocRakefile = File.join(File.dirname(__FILE__), 'nanoc', 'Rakefile')
-  load nanocRakefile
-  dir = nanocRakefile.pathmap("%d")
+  dir = File.join(File.dirname(__FILE__), 'nanoc')
   Dir.chdir(dir) do
-    Rake::Task[:compile].invoke()
+    system('nanoc', 'compile')
   end
 end
