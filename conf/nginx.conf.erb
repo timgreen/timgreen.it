@@ -5,8 +5,6 @@ events {
   worker_connections  1024;
 }
 
-error_log ./error.log;
-
 http {
   include mime.types;
   index   index.html;
@@ -21,7 +19,7 @@ http {
     rewrite ^(.*) http://timgreen.it$1 permanent;
   }
   server {
-    server_name timgreen.it;
+    server_name timgreen.it timgreen.herokuapp.com;
     listen <%= ENV['PORT'] %>;
     #access_log /var/log/nginx/timgreen.it.access.log;
     #error_log /var/log/nginx/timgreen.it.error.log;
