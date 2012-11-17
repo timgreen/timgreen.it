@@ -61,7 +61,7 @@ end
 compile '/blog/*' do
   if item[:kind] == 'article'
     filter :kramdown
-    filter :dot
+    #filter :dot
     filter :code_class_fix
     filter :colorize_syntax, :default_colorizer => :pygmentize
     layout 'blog'
