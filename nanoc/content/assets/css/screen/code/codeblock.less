@@ -12,7 +12,7 @@ pre > code {
   &[lang] {
     @h: 10px;
     padding-top: 10px + @h;
-    ::before {
+    &::before {
       content: attr(lang);
       display: block;
       float: right;
