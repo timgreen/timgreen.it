@@ -1,8 +1,18 @@
-#daemon off;
+daemon off;
+worker_processes  1;
+
+events {
+  worker_connections  1024;
+}
+
 
 http {
   include mime.types;
   index   index.html;
+  default_type  application/octet-stream;
+
+  sendfile           on;
+  keepalive_timeout  65;
 
   server {
     server_name www.timgreen.it;
@@ -17,7 +27,7 @@ http {
 
     error_page 404 =404 /404/;
 
-    root ../deploy/;
+    root deploy;
     more_set_headers 'X-UA-Compatible: chrome=1';
 
     location / {
