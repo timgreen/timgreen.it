@@ -2,7 +2,6 @@
 
 desc 'Assets precompile'
 task "assets:precompile" do
-  println ENV['HOME']
   ENV['DOT_COMMAND'] = ENV['HOME'] + '/.graphviz/bin/dot'
 
   dir = File.join(File.dirname(__FILE__), 'nanoc')
