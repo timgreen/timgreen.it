@@ -17,11 +17,15 @@ class DotRender < Nanoc3::Filter
   end
 
   private
+  def dot_command
+    ENV['DOT_COMMAND'] || 'dot'
+  end
+
   def dot2svg(content)
-    check_availability('dot', '-V')
+    check_availability(dot_command, '-V')
 
     # Build command
-    cmd = [ 'dot', '-Tsvg' ]
+    cmd = [ dot_command, '-Tsvg' ]
 
     # Run command
     stdout = StringIO.new
