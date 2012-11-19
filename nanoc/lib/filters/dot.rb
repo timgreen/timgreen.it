@@ -18,8 +18,7 @@ class DotRender < Nanoc3::Filter
 
   private
   def dot_command
-    #ENV['DOT_COMMAND'] || 'dot'
-    ENV['HOME'] + '.graphviz/bin/dot'
+    File.dirname(__FILE__) + "/../../tools/dot.sh"
   end
 
   def dot2svg(content)
