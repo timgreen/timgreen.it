@@ -80,12 +80,18 @@
       color: @nav-item-color;
     }
   }
+
 }
 
-.breadcrumbs-list {
-  li {
-    &::after {
-      content: ">";
+#breadcrumbs {
+  .breadcrumbs-list {
+    li {
+      &::after {
+        content: ">";
+      }
+      &:last-child::after {
+        content: "\0020";
+      }
     }
   }
 }
