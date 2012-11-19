@@ -11,7 +11,7 @@ task :download_ga_js do
 end
 
 task :compile_only do
-  system('nanoc3', 'compile')
+  system('nanoc', 'compile')
 end
 
 task :rename_assets do
@@ -29,12 +29,12 @@ task :compile => [:compile_only]
 
 desc 'Auto Compile'
 task :ac do
-  system('nanoc3', 'autocompile')
+  system('nanoc', 'autocompile')
 end
 
 desc 'View'
 task :view do
-  system('nanoc3', 'view')
+  system('nanoc', 'view')
 end
 
 desc 'Submit sitemap to search engines & Ping feedburner to update feed.'

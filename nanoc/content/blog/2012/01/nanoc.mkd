@@ -22,7 +22,7 @@ publish: true
 
 ## Install Nanoc
 
-Nanoc 是用 Ruby 写的, 推荐先[安装 rvm](http://beginrescueend.com/rvm/install/), 再通过 `gem install nanoc` 安装.
+Nanoc 是用 Ruby 写的, 推荐先[安装 rvm](https://rvm.io/rvm/install/), 再通过 `gem install nanoc` 安装.
 
 在使用时可能还会用到更多的 gems, 这是我的 `Gemfile`, 可以直接通过 `bundle install` 安装.
 

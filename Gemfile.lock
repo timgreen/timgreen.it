@@ -44,7 +44,7 @@ DEPENDENCIES
   kramdown
   less
   mime-types
-  nanoc
+  nanoc (>= 3.4.2)
   nokogiri
   pygmentize
   systemu
