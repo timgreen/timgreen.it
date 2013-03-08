@@ -1,0 +1,146 @@
+---
+kind: 'article'
+created_at: 2013-03-09 01:35:18 +8
+title: 'Nginx cookie based ldap auth'
+tags: [nginx, lua, ldap]
+publish: true
+---
+
+## Backgroud
+
+在团队里，我一直使用 LDAP 作为中心认证服务. 很自然的, 对上一些放在 web 上的内部资料 / wiki 啊什么的也想加一层 ldap auth.
+
+一开始使用的是 [nginx-pam-auth module][NgxPamAuthModule] + ldap-pam 的方案. 一个源自 ldap-pam 的缺点是, 一个系统只用配置一套 ldap.
+
+然后就换用了 [nginx-ldap-auth module][NgxLdapAuthModule]. 这下总算不信赖 pam 了.
+
+但是这样还是不够好, 有以下几个由 HTTP Basic Auth 带来的问题:
+
+   * username/password 明文传输. 在使用 self-signed-cert 上 https 后, 这个问题算是解决了一半.
+   * 就算是选了记住密码, 每次打开浏览器还是要点一下确认才可以通过.
+   * 对于不同的 sub-domain 都要重复验证. (我们团队的 cloud wiki 是 pre account 的, 每个人的 sub-domain 都是不一样的)
+
+所以我希望可以使用 cookie based 的 auth 方案. 前两天没事翻 nginx module 的时候, 正好看到一个神 slides, [Scripting with Nginx][NgxScripting], 终于可以将这个方案实施了。
+
+
+## Solution Overview
+
+我这里选用了两个 modules [nginx-ldap-auth][NgxLdapAuthModule] 和 [lua-nginx-module][NgxLuaModule] 来"组装"这个方案.
+
+<figure>
+  <dot>
+  digraph G {
+    node [ fontsize=10 ];
+    edge [ fontsize=10 ];
+
+    subDomain [ shape=box, label="SubDomain Resource" ];
+    checkCookie [ label="Check valid cookie" ];
+    authDomain [ shape=box, label="Auth with ldap" ];
+    authSuccess [ label="Auth Success: <br>Write cookie & redirect back", color=green ];
+    authFailed [ label="Auth Failed", color=red ];
+    user [ shape=none ];
+
+    user -> checkCookie [ style=dotted ];
+    checkCookie -> subDomain [ label="yes", color=green, fontcolor=green ];
+    checkCookie -> authDomain [ label="no", color=red, fontcolor=red ];
+    authDomain -> authSuccess [ label="pass", color=green, fontcolor=green ];
+    authSuccess -> checkCookie;
+    authDomain -> authFailed [ label="not pass", color=red, fontcolor=red ];
+  }
+  </dot>
+</figure>
+
+## Solution Detail
+
+  * 当用户访问 `*.<sub_domain_suffix>` 时, lua script 会去验证 cookie, 看看是不是一个合法的用户, 如果是就放行, 如果不是就 redirect 到 `auth.<sub_domain_suffix>`.
+  * 当用户访问 `auth.<sub_domain_suffix>` 时, nginx-ldap-auth module 会进行 ldap 验证. 通过验证后 lua script 会将 cookie 写个 `Domain=.<sub_domain_suffix>` 并 redirect 回原来的页面.
+
+> 事实上 `auth.<sub_domain_suffix>` 这里, 可以使用 php + php-ldap 或者 lua + lua ldap module 或任意别的方式完成, 我这里只是偷了个懒.
+
+### Sample Nginx Config
+
+{:lang="nginx"}
+    server {
+      set $auth_key "xxxx";
+
+      server_name auth.subdomain.com;
+
+      auth_ldap "Welcome foo";
+      auth_ldap_require valid_user;
+      auth_ldap_satisfy any;
+
+      location / {
+        default_type 'text/html';
+
+        content_by_lua '
+          local maxAge = 60 * 60 * 24 * 7
+          local expire = ngx.req.start_time() + maxAge
+          local hash = ngx.md5(ngx.var.auth_key .. "|" .. ngx.var.remote_user .. "|" .. expire)
+          ngx.header["Set-Cookie"] = {
+            "authUser=" .. ngx.var.remote_user .. "; Domain=.subdomain.com; Path=/; Max-Age=" .. maxAge,
+            "authHash=" .. hash .. "; Domain=.subdomain.com; Path=/; Max-Age=" .. maxAge,
+            "authExpire=" .. expire .. "; Domain=.subdomain.com; Path=/; Max-Age=" .. maxAge
+          }
+
+          return ngx.redirect(ngx.unescape_uri(ngx.var.arg_r), ngx.HTTP_MOVED_TEMPORARILY)
+        ';
+      }
+    }
+
+    server {
+      set $auth_key "xxxx";
+
+      server_name "~^(?<subdomain>.+)\.subdomain\.com$";
+
+      error_page 404 /404.html;
+
+      ## auth start
+        set $auth_user '';
+        if ($http_cookie ~* "authUser=([a-z0-9.]+)") {
+          set $auth_user $1;
+        }
+        set $auth_hash '';
+        if ($http_cookie ~* "authHash=([a-z0-9.]+)") {
+          set $auth_hash $1;
+        }
+        set $auth_expire '';
+        if ($http_cookie ~* "authExpire=([a-z0-9.]+)") {
+          set $auth_expire $1;
+        }
+
+        set $auth_pass "0";
+        set_by_lua $auth_pass '
+          function check_pass()
+            if (ngx.req.start_time() >= tonumber(ngx.var.auth_expire)) then
+              error({code=1})
+            end
+            local hash = ngx.md5(ngx.var.auth_key .. "|" .. ngx.var.auth_user .. "|" .. ngx.var.auth_expire)
+            if (hash ~= ngx.var.auth_hash) then
+              error({code=2})
+            end
+          end
+          if (pcall(check_pass)) then
+            return "1"
+          else
+            return "0"
+          end
+        ';
+
+        if ($auth_pass ~ "0") {
+          set $auth_back_url "";
+          set_by_lua $auth_back_url '
+            -- ngx.escape_uri(ngx.var.scheme .. "://" .. ngx.var.host .. ngx.var.uri .. "?" .. ngx.var.query_string)
+            return ngx.escape_uri(ngx.var.scheme .. "://" .. ngx.var.host .. ngx.var.uri)
+          ';
+          rewrite ^ https://auth.subdomain.com/?r=$auth_back_url last;
+        }
+      ## auth end
+
+      location / {
+        ...
+      }
+
+[NgxScripting]: http://agentzh.org/misc/slides/nginx-conf-scripting/
+[NgxLdapAuthModule]: https://github.com/kvspb/nginx-auth-ldap
+[NgxLuaModule]: https://github.com/chaoslawful/lua-nginx-module
+[NgxPamAuthModule]: http://web.iti.upv.es/~sto/nginx/
