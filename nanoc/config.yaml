@@ -68,7 +68,7 @@ watcher:
 # deploy
 deploy:
   default:
-    dst: "timgreen.it:www/timgreen.it"
+    dst: "timgreen.it:app-root/data/html"
 
 # Disqus
 disqus_shortname: timgreenit

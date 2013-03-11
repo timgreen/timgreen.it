@@ -1,5 +1,4 @@
 tmp/
-Gemfile.lock
 output.diff
 *.pyc
 crash.log
