@@ -33,7 +33,7 @@ module Blogging
 
   def blog_month_items_in(year)
     @items.select do |item|
-      item.identifier =~ /^\/blog\/\d{4,}\/\d{2,}\/$/
+      item.identifier =~ /^\/blog\/\d{4,}\/\d{2,}\/$/ and item.identifier.start_with? "/blog/#{year}/"
     end
   end
 
