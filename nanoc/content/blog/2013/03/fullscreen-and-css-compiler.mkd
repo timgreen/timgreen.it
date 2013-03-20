@@ -1,0 +1,54 @@
+---
+kind: 'article'
+created_at: 2013-03-19 17:28:08 +8
+title: 'Fullscreen and css compiler'
+tags: [css, html5, fullscreen]
+publish: true
+---
+
+## 问题
+
+最近团队开发时遇到了一个让人不相信科学的问题. 一个使用了 fullscreen api 的功能, 在开发模式下一切正常, 然后在产品模式下 fullscreen 后元素却没有全屏. 而产品模式与开发模式的区别是所有 css 和 js 会被编译成 *compiled.css* 和 *compiled.js* .
+
+## 原因
+
+在 chrome 中用放大镜看了半天, 初步定位问题是在产品模式下 fullscreen 后, css 中 `:full-screen` 相关的 rule 并没有应用在 fullscreen 元素上. 这让我回想起一开始用 fullscreen api 时遇到的一个 'trap'.
+
+### :full-screen css trap
+
+如[这里](http://www.sitepoint.com/html5-full-screen-api/)所说的, list of vendor prefixed selectors doesn't work:
+
+{:lang="css"}
+    /* THIS DOES NOT WORK */
+    #myelement:-webkit-full-screen,
+    #myelement:-moz-full-screen,
+    #myelement:-ms-full-screen,
+    #myelement:-o-full-screen,
+    #myelement:full-screen {
+      width: 100%;
+    }
+
+一定要写成
+
+{:lang="css"}
+    /* this works */
+    #myelement:-webkit-full-screen { width: 100% }
+    #myelement:-moz-full-screen    { width: 100% }
+    #myelement:-ms-full-screen     { width: 100% }
+    #myelement:-o-full-screen      { width: 100% }
+    #myelement:full-screen         { width: 100% }
+
+之所以要这样的原因是目前的主流浏览器在处理 css rule 时, 只要遇到一个无法识别的选择器, 整条 rule 都会忽略.
+
+### css compiler optimization
+
+打开 *compiled.css* search 了一下, 果然是这个问题. [colsure-stylesheets][ColsureStylesheets] 在 compile 的时候会自动优化合并相同的 rule, 所以就造成了一开始奇怪的现象.
+
+## 解决方案
+
+一个临时的解决方案就是让这几个 rule 看起来略有不同.
+
+   * 每个加上几条无用的 css
+   * 调整一下 rule 中 css 的顺序
+
+[ColsureStylesheets]: https://code.google.com/p/closure-stylesheets/
